@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 let count = 0;
 
+const MONGODB_URI = require('../config/env.config').MONGODB_URI;
+
 const options = {
     autoIndex: false, // Don't build indexes
     poolSize: 10, // Maintain up to 10 socket connections
@@ -12,7 +14,7 @@ const options = {
 
 const connectWithRetry = () => {
     console.log('MongoDB connection with retry');
-    mongoose.connect("mongodb://localhost/waypen-backend", options).then(()=>{
+    mongoose.connect(MONGODB_URI, options).then( () => {
         console.log('MongoDB is connected')
     }).catch(err=>{
         console.log('MongoDB connection unsuccessful, retry after 5 seconds. ', ++count);
