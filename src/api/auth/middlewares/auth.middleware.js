@@ -55,7 +55,7 @@ exports.isPasswordAndUserMatch = (req, res, next) => {
 exports.userDoesNotExist = (req, res, next) => {
     UserModel.findByEmail(req.body.email)
         .then((user) => {
-            if(user[0]) {
+            if (user[0]) {
                 res.status(400).json({errors: ['Same email exists']});
             }
             else {

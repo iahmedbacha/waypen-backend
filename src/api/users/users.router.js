@@ -4,11 +4,11 @@ const UsersController = require('./controllers/users.controller');
 const PermissionMiddleware = require('../common/middlewares/auth.permission.middleware');
 const ValidationMiddleware = require('../common/middlewares/auth.validation.middleware');
 
-const config = require('../common/config/env.config');
+const PERMISSION_LEVELS = require('../common/config/env.config').PERMISSION_LEVELS;
 
-const ADMIN = config.PERMISSION_LEVELS.ADMIN;
-const PAID = config.PERMISSION_LEVELS.PAID_USER;
-const FREE = config.PERMISSION_LEVELS.NORMAL_USER;
+const ADMIN = PERMISSION_LEVELS.ADMIN;
+const PAID_USER = PERMISSION_LEVELS.PAID_USER;
+const NORMAL_USER = PERMISSION_LEVELS.NORMAL_USER;
 
 UsersRouter.get('/', [
     ValidationMiddleware.validJWTNeeded,

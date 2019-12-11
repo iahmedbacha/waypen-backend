@@ -23,7 +23,8 @@ exports.refresh_token = (req, res) => {
         req.body = req.jwt;
         let token = jwt.sign(req.body, jwtSecret);
         res.status(201).json({id: token});
-    } catch (err) {
+    }
+    catch (err) {
         res.status(500).json({errors: err});
     }
 };

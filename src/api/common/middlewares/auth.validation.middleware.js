@@ -1,5 +1,5 @@
-const jwt = require('jsonwebtoken')
-const secret = require('../config/env.config.js').JWT_SECRET
+const jwt = require('jsonwebtoken');
+const secret = require('../config/env.config.js').JWT_SECRET;
 const crypto = require('crypto');
 
 exports.verifyRefreshBodyField = (req, res, next) => {
@@ -24,7 +24,6 @@ exports.validRefreshNeeded = (req, res, next) => {
     }
 };
 
-
 exports.validJWTNeeded = (req, res, next) => {
     if (req.headers['authorization']) {
         try {
@@ -37,7 +36,8 @@ exports.validJWTNeeded = (req, res, next) => {
                 return next();
             }
 
-        } catch (err) {
+        }
+        catch (err) {
             return res.status(403).json({errors: ['JWT not valid']});
         }
     }
