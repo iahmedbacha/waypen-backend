@@ -1,7 +1,18 @@
 const crypto = require('crypto');
 const { body } = require('express-validator');
 
+const ValidationMiddleware = require('../../common/middlewares/validation.middleware');
 const UserModel = require('../../users/models/users.model');
+const secret = require('../../common/config/env.config.js').JWT_SECRET;
+
+isNewUser = body('email').custom(async value => {
+    await UserModel.findByEmail(value).then(user => {
+        if (user[0]) {
+            throw new Error('Email already in use');
+        }
+        return true;
+    });
+});
 
 isPasswordAndUserMatch = body().custom(async (body, {req}) => {
     await UserModel.findByEmail(body.email).then(user => {
@@ -29,14 +40,27 @@ isPasswordAndUserMatch = body().custom(async (body, {req}) => {
     });
 });
 
-isNewUser = body('email').custom(async value => {
-    await UserModel.findByEmail(value).then(user => {
-        if (user[0]) {
-            throw new Error('Email already in use');
+isValidRefreshToken = body('refresh_token').custom(async (value, {req}) => {
+    await (() => {
+        let b = new Buffer(value, 'base64');
+        let refresh_token = b.toString();
+        let hash = crypto.createHmac('sha512', req.jwt.refreshKey).update(req.jwt.userId + secret).digest("base64");
+        if (hash === refresh_token) {
+            req.body = req.jwt;
+            return true;
         }
-        return true;
-    });
+        else {
+            throw new Error('Invalid refresh token');
+        }
+    })();
 });
+
+exports.signupValidationRules = [
+    body('fullName').not().isEmpty().trim(),
+    body('email').isEmail(),
+    body('password').isLength({min: 8}),
+    isNewUser
+];
 
 exports.signinValidationRules = [
     body('email').isEmail(),
@@ -44,9 +68,7 @@ exports.signinValidationRules = [
     isPasswordAndUserMatch
 ];
 
-exports.signupValidationRules = [
-    body('fullName').not().isEmpty().trim(),
-    body('email').isEmail(),
-    body('password').isLength({min: 8}),
-    isNewUser
+exports.refreshValidationRules = [
+    ValidationMiddleware.isValidJWT,
+    isValidRefreshToken
 ];

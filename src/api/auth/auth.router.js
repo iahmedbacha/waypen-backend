@@ -1,26 +1,26 @@
 const AuthRouter = require('express').Router();
 
 const AuthMiddleware = require('./middlewares/auth.middleware');
+const ValidationMiddleware = require('../common/middlewares/validation.middleware');
 const AuthController = require('./controllers/auth.controller');
-const AuthValidationMiddleware = require('../common/middlewares/auth.validation.middleware');
 const UsersController = require('../users/controllers/users.controller');
+
+AuthRouter.post('/signup', [
+    AuthMiddleware.signupValidationRules,
+    ValidationMiddleware.validate,
+    UsersController.insert
+]);
 
 AuthRouter.post('/signin', [
     AuthMiddleware.signinValidationRules,
-    AuthValidationMiddleware.validate,
+    ValidationMiddleware.validate,
     AuthController.signin
 ]);
 
 AuthRouter.post('/refresh', [
-    AuthValidationMiddleware.refreshValidationRules,
-    AuthValidationMiddleware.validate,
+    AuthMiddleware.refreshValidationRules,
+    ValidationMiddleware.validate,
     AuthController.signin
-]);
-
-AuthRouter.post('/signup', [
-    AuthMiddleware.signupValidationRules,
-    AuthValidationMiddleware.validate,
-    UsersController.insert
 ]);
 
 module.exports = AuthRouter;
