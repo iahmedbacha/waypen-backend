@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken')
 const secret = require('../config/env.config')['JWT_SECRET'];
 
-const ADMIN_PERMISSION = 1024;
+const ADMIN_PERMISSION = require('../../common/config/env.config').PERMISSION_LEVELS.ADMIN;
 
 exports.minimumPermissionLevelRequired = (required_permission_level) => {
     return (req, res, next) => {
@@ -26,7 +26,7 @@ exports.onlySameUserOrAdminCanDoThisAction = (req, res, next) => {
             return next();
         }
         else {
-            return res.status(403).json('Action not permitted');
+            return res.status(403).json({errors: ['Action not permitted']});
         }
     }
 };
