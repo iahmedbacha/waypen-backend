@@ -1,52 +1,46 @@
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
-const { body, check, validationResult } = require('express-validator');
+const { body, header, validationResult } = require('express-validator');
 
 const secret = require('../config/env.config.js').JWT_SECRET;
 
-exports.verifyRefreshBodyField = (req, res, next) => {
-    if (req.body && req.body.refresh_token) {
-        return next();
-    }
-    else {
-        return res.status(400).json({errors: ['need to pass refresh_token field']});
-    }
-};
-
-exports.validRefreshNeeded = (req, res, next) => {
-    let b = new Buffer(req.body.refresh_token, 'base64');
-    let refresh_token = b.toString();
-    let hash = crypto.createHmac('sha512', req.jwt.refreshKey).update(req.jwt.userId + secret).digest("base64");
-    if (hash === refresh_token) {
-        req.body = req.jwt;
-        return next();
-    }
-    else {
-        return res.status(400).json({errors: ['Invalid refresh token']});
-    }
-};
-
-exports.validJWTNeeded = (req, res, next) => {
-    if (req.headers['authorization']) {
-        try {
-            let authorization = req.headers['authorization'].split(' ');
-            if (authorization[0] !== 'Bearer') {
-                return res.status(401).json({errors: ['token type (Bearer) not mentioned']});
-            }
-            else {
+isValidJWT = header('authorization').custom(async (value, {req}) => {
+    await (() => {
+        let authorization = value.split(' ');
+        if (authorization[0] !== 'Bearer') {
+            throw new Error('Token type (Bearer) not mentioned');
+        }
+        else {
+            try {
                 req.jwt = jwt.verify(authorization[1], secret);
-                return next();
+                return true;
             }
+            catch (err) {
+                throw new Error('Invalid JWT')
+            }
+        }
+    })();
+});
 
+isValidRefreshToken = body('refresh_token').custom(async (value, {req}) => {
+    await (() => {
+        let b = new Buffer(value, 'base64');
+        let refresh_token = b.toString();
+        let hash = crypto.createHmac('sha512', req.jwt.refreshKey).update(req.jwt.userId + secret).digest("base64");
+        if (hash === refresh_token) {
+            req.body = req.jwt;
+            return true;
         }
-        catch (err) {
-            return res.status(403).json({errors: ['JWT not valid']});
+        else {
+            throw new Error('Invalid refresh token');
         }
-    }
-    else {
-        return res.status(401).json({errors: ['JWT not valid']});
-    }
-};
+    })();
+});
+
+exports.refreshValidationRules = [
+    isValidJWT,
+    isValidRefreshToken
+];
 
 exports.validate = (req, res, next) => {
     const errors = validationResult(req);

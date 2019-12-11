@@ -12,9 +12,8 @@ AuthRouter.post('/signin', [
 ]);
 
 AuthRouter.post('/refresh', [
-    AuthValidationMiddleware.validJWTNeeded,
-    AuthValidationMiddleware.verifyRefreshBodyField,
-    AuthValidationMiddleware.validRefreshNeeded,
+    AuthValidationMiddleware.refreshValidationRules,
+    AuthValidationMiddleware.validate,
     AuthController.signin
 ]);
 
