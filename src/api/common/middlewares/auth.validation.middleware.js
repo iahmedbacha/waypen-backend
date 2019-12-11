@@ -1,6 +1,8 @@
 const jwt = require('jsonwebtoken');
-const secret = require('../config/env.config.js').JWT_SECRET;
 const crypto = require('crypto');
+const { body, check, validationResult } = require('express-validator');
+
+const secret = require('../config/env.config.js').JWT_SECRET;
 
 exports.verifyRefreshBodyField = (req, res, next) => {
     if (req.body && req.body.refresh_token) {
@@ -43,5 +45,15 @@ exports.validJWTNeeded = (req, res, next) => {
     }
     else {
         return res.status(401).json({errors: ['JWT not valid']});
+    }
+};
+
+exports.validate = (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({errors: errors.array()});
+    }
+    else {
+        return next();
     }
 };

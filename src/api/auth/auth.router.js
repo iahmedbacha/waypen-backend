@@ -6,8 +6,8 @@ const AuthValidationMiddleware = require('../common/middlewares/auth.validation.
 const UsersController = require('../users/controllers/users.controller');
 
 AuthRouter.post('/signin', [
-    AuthMiddleware.hasSigninValidFields,
-    AuthMiddleware.isPasswordAndUserMatch,
+    AuthMiddleware.signinValidationRules,
+    AuthValidationMiddleware.validate,
     AuthController.signin
 ]);
 
@@ -19,8 +19,8 @@ AuthRouter.post('/refresh', [
 ]);
 
 AuthRouter.post('/signup', [
-    AuthMiddleware.hasSignupValidFields,
-    AuthMiddleware.userDoesNotExist,
+    AuthMiddleware.signupValidationRules,
+    AuthValidationMiddleware.validate,
     UsersController.insert
 ]);
 
