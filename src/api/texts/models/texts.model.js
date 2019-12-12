@@ -1,34 +1,33 @@
 const mongoose = require('../../common/services/mongoose.service').mongoose;
 const Schema = mongoose.Schema;
 
-const userSchema = new Schema({
-    fullName: String,
-    email: String,
-    password: String,
-    permissionLevel: Number
+const textSchema = new Schema({
+    designation: String,
+    content: String,
+    language: String,
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    }
 });
 
-userSchema.virtual('id').get(function () {
+textSchema.virtual('id').get(function () {
     return this._id.toHexString();
 });
 
 // Ensure virtual fields are serialised.
-userSchema.set('toJSON', {
+textSchema.set('toJSON', {
     virtuals: true
 });
 
-userSchema.findById = function (cb) {
-    return this.model('Users').find({id: this.id}, cb);
+textSchema.findById = function (cb) {
+    return this.model('Texts').find({id: this.id}, cb);
 };
 
-const User = mongoose.model('Users', userSchema);
-
-exports.findByEmail = (email) => {
-    return User.find({email: email});
-};
+const Text = mongoose.model('Texts', textSchema);
 
 exports.findById = (id) => {
-    return User.findById(id)
+    return Text.findById(id)
         .then((result) => {
             result = result.toJSON();
             delete result._id;
@@ -38,45 +37,45 @@ exports.findById = (id) => {
         });
 };
 
-exports.createUser = (userData) => {
-    const user = new User(userData);
-    return user.save();
+exports.createText = (textData) => {
+    const text = new Text(textData);
+    return text.save();
 };
 
 exports.list = (perPage, page) => {
     return new Promise((resolve, reject) => {
-        User.find()
+        Text.find()
             .limit(perPage)
             .skip(perPage * page)
-            .exec(function (err, users) {
+            .exec(function (err, texts) {
                 if (err) {
                     reject(err);
                 }
                 else {
-                    resolve(users);
+                    resolve(texts);
                 }
             })
     });
 };
 
-exports.patchUser = (id, userData) => {
+exports.patchText = (id, textData) => {
     return new Promise((resolve, reject) => {
-        User.findById(id, function (err, user) {
+        Text.findById(id, function (err, text) {
             if (err) reject(err);
-            for (let i in userData) {
-                user[i] = userData[i];
+            for (let i in textData) {
+                text[i] = textData[i];
             }
-            user.save(function (err, updatedUser) {
+            text.save(function (err, updatedText) {
                 if (err) return reject(err);
-                resolve(updatedUser);
+                resolve(updatedText);
             });
         });
     })
 };
 
-exports.removeById = (userId) => {
+exports.removeById = (textId) => {
     return new Promise((resolve, reject) => {
-        User.deleteOne({_id: userId}, (err) => {
+        Text.deleteOne({_id: textId}, (err) => {
             if (err) {
                 reject(err);
             }
