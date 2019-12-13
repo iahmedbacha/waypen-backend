@@ -32,7 +32,6 @@ exports.findById = (id) => {
             result = result.toJSON();
             delete result._id;
             delete result.__v;
-            delete result.password;
             return result;
         });
 };
@@ -42,9 +41,9 @@ exports.createText = (textData) => {
     return text.save();
 };
 
-exports.list = (perPage, page) => {
+exports.list = (perPage, page, textData) => {
     return new Promise((resolve, reject) => {
-        Text.find()
+        Text.find(textData)
             .limit(perPage)
             .skip(perPage * page)
             .exec(function (err, texts) {

@@ -9,7 +9,10 @@ exports.list = (req, res) => {
             page = Number.isInteger(req.query.page) ? req.query.page : 0;
         }
     }
-    TextModel.list(limit, page)
+    var textData = {
+        user: req.query.userId ? req.query.userId : req.jwt.userId
+    };
+    TextModel.list(limit, page, textData)
         .then((result) => {
             res.status(200).json({result: result});
         })
