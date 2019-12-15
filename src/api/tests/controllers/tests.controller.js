@@ -52,7 +52,7 @@ exports.insert = (req, res) => {
                     negative: 0,
                 })
             }
-            for (let i = 0; i < words.length; i++) {
+            for (let i = 0; i < Math.min(words.length, recognitionUnits.length); i++) {
                 const candidates = recognitionUnits[i].alternates.filter(alternate => alternate.recognizedString.length === words[i].length).map(alternate => alternate.recognizedString);
                 candidates.push(recognitionUnits[i].recognizedText);
                 for (let j = 0; j < words[i].length; j++) {

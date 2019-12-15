@@ -8,7 +8,8 @@ const UsersController = require('../users/controllers/users.controller');
 AuthRouter.post('/signup', [
     AuthMiddleware.signupValidationRules,
     ValidationMiddleware.validate,
-    UsersController.insert
+    UsersController.insert,
+    AuthController.signin
 ]);
 
 AuthRouter.post('/signin', [
