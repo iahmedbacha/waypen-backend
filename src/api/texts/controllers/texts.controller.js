@@ -51,3 +51,21 @@ exports.removeById = (req, res) => {
             res.status(204).json({result: result});
         });
 };
+
+exports.insertDefault = (req, res) => {
+    var textData1 = {
+        designation: "Sport",
+        content: "Sport includes all forms of competitive physical activity or games",
+        language: "en-US",
+        user: req.userId
+    };
+    var textData2 = {
+        designation: "Education",
+        content: "Education is the process of facilitating learning, or the acquisition of knowledge, skills, values, beliefs, and habits",
+        language: "en-US",
+        user: req.userId
+    };
+    TextModel.createText(textData1);
+    TextModel.createText(textData2);
+    res.status(201).json({id: req.userId});
+};
