@@ -7,35 +7,35 @@ const ValidationMiddleware = require('../common/middlewares/validation.middlewar
 TextsRouter.get('/', [
     ValidationMiddleware.isValidJWT,
     ValidationMiddleware.validate,
-    PersmissionnMiddleware.onlySameUserOrAdminCanDoThisAction,
+    // PersmissionnMiddleware.onlySameUserOrAdminCanDoThisAction,
     TextsController.list
 ]);
 
 TextsRouter.get('/:textId', [
     ValidationMiddleware.isValidJWT,
     ValidationMiddleware.validate,
-    PersmissionnMiddleware.onlySameUserOrAdminCanDoThisAction,
+    // PersmissionnMiddleware.onlySameUserOrAdminCanDoThisAction,
     TextsController.getById
 ]);
 
 TextsRouter.post('/', [
     ValidationMiddleware.isValidJWT,
     ValidationMiddleware.validate,
-    PersmissionnMiddleware.onlySameUserOrAdminCanDoThisAction,
+    // PersmissionnMiddleware.onlySameUserOrAdminCanDoThisAction,
     TextsController.insert
 ]);
 
 TextsRouter.patch('/:textId', [
     ValidationMiddleware.isValidJWT,
     ValidationMiddleware.validate,
-    PersmissionnMiddleware.onlySameUserOrAdminCanDoThisAction,
+    // PersmissionnMiddleware.onlySameUserOrAdminCanDoThisAction,
     TextsController.patchById
 ]);
 
 TextsRouter.delete('/:textId', [
     ValidationMiddleware.isValidJWT,
     ValidationMiddleware.validate,
-    PersmissionnMiddleware.onlySameUserOrAdminCanDoThisAction,
+    // PersmissionnMiddleware.onlySameUserOrAdminCanDoThisAction,
     TextsController.removeById
 ]);
 
