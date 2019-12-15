@@ -9,7 +9,6 @@ AuthRouter.post('/signup', [
     AuthMiddleware.signupValidationRules,
     ValidationMiddleware.validate,
     UsersController.insert,
-    AuthController.signin
 ]);
 
 AuthRouter.post('/signin', [
