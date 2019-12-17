@@ -83,6 +83,7 @@ exports.insert = (req, res) => {
                     accuracy: element.positive + element.negative === 0 ? 0 : element.positive/(element.positive + element.negative),
                 })
             });
+            recognitionAnalysis.analysis.sort((a, b) => a.accuracy - b.accuracy);
             let positive = 0;
             let negative = 0;
             count.map(element => {
