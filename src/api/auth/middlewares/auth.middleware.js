@@ -57,13 +57,13 @@ isValidRefreshToken = body('refresh_token').custom(async (value, {req}) => {
 
 exports.signupValidationRules = [
     body('fullName').not().isEmpty().trim(),
-    body('email').trim().isEmail(),
+    body('email').trim().isEmail().normalizeEmail(),
     body('password').not().isEmpty(),
     isNewUser
 ];
 
 exports.signinValidationRules = [
-    body('email').trim().isEmail(),
+    body('email').trim().isEmail().normalizeEmail(),
     body('password').not().isEmpty(),
     isPasswordAndUserMatch
 ];
