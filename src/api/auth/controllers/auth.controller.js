@@ -11,7 +11,15 @@ exports.signin = (req, res) => {
         let token = jwt.sign(req.body, jwtSecret);
         let b = new Buffer(hash);
         let refresh_token = b.toString('base64');
-        res.status(201).json({accessToken: token, refreshToken: refresh_token});
+        res.status(200).json({
+            user: {
+                userId: req.body.userId,
+                fullName: req.body.fullName,
+                email: req.body.email,
+                accessToken: token,
+                refreshToken: refresh_token
+            }
+        });
     }
     catch (err) {
         res.status(500).json({errors: [err]});

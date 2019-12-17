@@ -29,7 +29,7 @@ isPasswordAndUserMatch = body().custom(async (body, {req}) => {
                     email: user[0].email,
                     permissionLevel: user[0].permissionLevel,
                     provider: 'email',
-                    name: user[0].fullName
+                    fullName: user[0].fullName
                 };
                 return true;
             }
