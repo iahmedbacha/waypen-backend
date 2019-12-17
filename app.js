@@ -34,7 +34,7 @@ app.use(function(err, req, res, next) {
 
   // return the error message
   res.status(err.status || 500);
-  res.json({errors: ['Page not found']});
+  res.json({errors: req.body});
 });
 
 module.exports = app;

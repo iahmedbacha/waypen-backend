@@ -80,7 +80,7 @@ exports.insert = (req, res) => {
             count.map(element => {
                 recognitionAnalysis.analysis.push({
                     character: element.character,
-                    accuracy: element.positive/(element.positive + element.negative),
+                    accuracy: element.positive + element.negative === 0 ? 0 : element.positive/(element.positive + element.negative),
                 })
             });
             let positive = 0;
@@ -89,7 +89,7 @@ exports.insert = (req, res) => {
                 positive += element.positive;
                 negative += element.negative;
             });
-            const score = positive / (positive + negative);
+            const score = positive + negative === 0 ? 0 : positive / (positive + negative);
             const testData = {
                 designation: req.body.designation,
                 score: score,
